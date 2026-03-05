@@ -24,6 +24,7 @@ spl_autoload_register(function ($class_name) {
         'classes/export/',
         'classes/helpers/',
         'classes/install/',
+        'classes/main/',
         'classes/shortcodes/',
         'classes/views/',
         'classes/widget/'
@@ -38,5 +39,21 @@ spl_autoload_register(function ($class_name) {
     }
 });
 
-// Initialisation basique pour tester que tout charge bien
-// echo "";
+// Démarrage du plugin une fois que WordPress a chargé tous les plugins
+add_action('plugins_loaded', 'insset_start_plugin');
+
+function insset_start_plugin() {
+    // On instancie la classe principale qui va tout orchestrer
+    $insset_main = new InssetMain();
+}
+
+// Hook d'activation : lancer la création des tables
+register_activation_hook(__FILE__, 'insset_activate_plugin');
+
+function insset_activate_plugin() {
+    // On met à jour le nom du fichier à charger
+    require_once INSSET_DIR . 'classes/install/InssetInstaller.php';
+    
+    // On appelle la méthode sur la nouvelle classe préfixée
+    InssetInstaller::create_tables();
+}
