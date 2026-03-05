@@ -2,17 +2,14 @@
 
 class InssetMain {
 
-    // Constructeur : c'est ici qu'on attache nos fonctions aux "hooks" de WordPress
     public function __construct() {
         
         // 1. Chargement des assets (CSS/JS) pour le Front-Office (côté étudiant)
         add_action('wp_enqueue_scripts', [$this, 'load_front_assets']);
-
         // 2. Chargement des assets pour le Back-Office (côté administration)
         add_action('admin_enqueue_scripts', [$this, 'load_admin_assets']);
+        add_action('admin_menu', [$this, 'add_admin_menu']);
 
-        // Bientôt, on ajoutera ici les appels pour créer le menu d'administration
-        // et les contrôleurs (actions) du projet.
     }
 
     /**
@@ -37,10 +34,19 @@ class InssetMain {
         );
     }
 
-    /**
-     * Charge les fichiers CSS et JS dans l'administration de WordPress
-     */
     public function load_admin_assets() {
-        // On pourra créer un admin-style.css plus tard si besoin pour le back-office
+    }
+
+    public function add_admin_menu() {
+        // Ajoute un menu principal dans la barre latérale
+        add_menu_page(
+            'Gestion ParcoursSup',             // Titre de la page (onglet du navigateur)
+            'ParcoursSup',                     // Titre dans le menu latéral
+            'manage_options',                  // Droits requis (manage_options = Administrateur)
+            'insset-campaigns',                // Identifiant unique (slug) de la page
+            ['InssetCampaignController', 'render_admin_page'], // Le Contrôleur à appeler
+            'dashicons-welcome-learn-more',    // Icône WordPress (petit chapeau d'étudiant)
+            30                                 // Position dans le menu
+        );
     }
 }
