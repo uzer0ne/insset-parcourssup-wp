@@ -9,7 +9,7 @@ class InssetMain {
         // 2. Chargement des assets pour le Back-Office (côté administration)
         add_action('admin_enqueue_scripts', [$this, 'load_admin_assets']);
         add_action('admin_menu', [$this, 'add_admin_menu']);
-
+        add_shortcode('insset_login', ['InssetLoginShortcode', 'render']);
     }
 
     /**
