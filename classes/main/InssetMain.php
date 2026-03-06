@@ -10,6 +10,17 @@ class InssetMain {
         add_action('admin_enqueue_scripts', [$this, 'load_admin_assets']);
         add_action('admin_menu', [$this, 'add_admin_menu']);
         add_shortcode('insset_login', ['InssetLoginShortcode', 'render']);
+        add_action('init', [$this, 'start_session']);
+        add_shortcode('insset_login', ['InssetLoginShortcode', 'render']);
+        add_shortcode('insset_register', ['InssetRegisterShortcode', 'render']); // NOUVEAU
+    }
+    /**
+     * NOUVEAU : Démarre la session si elle n'existe pas encore
+     */
+    public function start_session() {
+        if (!session_id()) {
+            session_start();
+        }
     }
 
     /**
