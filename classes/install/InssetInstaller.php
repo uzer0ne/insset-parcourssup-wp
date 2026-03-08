@@ -39,7 +39,7 @@ class InssetInstaller {
 
         // 2. Table Campaign
         $sql_campaign = "CREATE TABLE $t_campaign (
-            id_campaign VARCHAR(50) NOT NULL,
+            id_campaign BIGINT(20) NOT NULL AUTO_INCREMENT,
             name_campaign VARCHAR(50),
             desc_campaign VARCHAR(300),
             startdate DATETIME,
@@ -64,7 +64,7 @@ class InssetInstaller {
 
         // 4. Table Asso : Campaign to Choice
         $sql_campaign_to_choice = "CREATE TABLE $t_campaign_to_choice (
-            id_campaign VARCHAR(50) NOT NULL,
+            id_campaign BIGINT(20) NOT NULL,
             id_choice VARCHAR(50) NOT NULL,
             PRIMARY KEY  (id_campaign, id_choice),
             KEY id_campaign (id_campaign),
@@ -75,7 +75,7 @@ class InssetInstaller {
         $sql_student_to_campaign = "CREATE TABLE $t_student_to_campaign (
             id_student_to_campaign VARCHAR(50) NOT NULL,
             id_student VARCHAR(50) NOT NULL,
-            id_campaign VARCHAR(50) NOT NULL,
+            id_campaign BIGINT(20) NOT NULL,
             num_candidate INT,
             status_candidate VARCHAR(50),
             date_add DATETIME DEFAULT CURRENT_TIMESTAMP,
