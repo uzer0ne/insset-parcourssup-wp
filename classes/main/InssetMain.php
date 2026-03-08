@@ -12,7 +12,8 @@ class InssetMain {
         add_shortcode('insset_login', ['InssetLoginShortcode', 'render']);
         add_action('init', [$this, 'start_session']);
         add_shortcode('insset_login', ['InssetLoginShortcode', 'render']);
-        add_shortcode('insset_register', ['InssetRegisterShortcode', 'render']); // NOUVEAU
+        add_shortcode('insset_register', ['InssetRegisterShortcode', 'render']);
+        add_shortcode('insset_choices', ['InssetChoiceShortcode', 'render']);
     }
     /**
      * NOUVEAU : Démarre la session si elle n'existe pas encore
