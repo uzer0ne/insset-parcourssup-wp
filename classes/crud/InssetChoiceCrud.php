@@ -39,7 +39,7 @@ class InssetChoiceCrud {
         // 3. Insérer les choix au format Entité/Valeur (student_choice)
         $table_choice = $wpdb->prefix . 'insset_student_choice';
 
-        // La boucle permet l'extensibilité maximale demandée par le prof : 
+        // La boucle permet l'extensibilité maximale : 
         // Si demain on passe à 5 choix, ce code n'aura pas besoin d'être modifié !
         foreach ($choices_array as $order => $id_choice) {
             $id_sc = uniqid('sc_');
@@ -59,5 +59,42 @@ class InssetChoiceCrud {
         }
 
         return true;
+    }
+    /**
+     * Récupère les choix enregistrés d'un étudiant
+     */
+    public static function get_student_choices($id_student) {
+        global $wpdb;
+        $table_stc = $wpdb->prefix . 'insset_student_to_campaign';
+        $table_sc  = $wpdb->prefix . 'insset_student_choice';
+
+        // On fait une jointure (JOIN) entre la table de participation et la table des choix détaillés
+        $query = $wpdb->prepare("
+            SELECT sc.id_choice, sc.choice_order
+            FROM $table_sc sc
+            INNER JOIN $table_stc stc ON sc.id_student_to_campaign = stc.id_student_to_campaign
+            WHERE stc.id_student = %s
+            ORDER BY sc.choice_order ASC
+        ", $id_student);
+
+        return $wpdb->get_results($query);
+    }
+    /**
+     * Vérifie si l'étudiant a déjà participé à la campagne active
+     */
+    public static function has_participated($id_student) {
+        global $wpdb;
+        $table_stc = $wpdb->prefix . 'insset_student_to_campaign';
+        $table_campaign = $wpdb->prefix . 'insset_campaign';
+
+        // On cherche s'il y a une ligne pour cet étudiant reliée à une campagne active
+        $query = $wpdb->prepare("
+            SELECT COUNT(*) 
+            FROM $table_stc stc
+            INNER JOIN $table_campaign c ON stc.id_campaign = c.id_campaign
+            WHERE stc.id_student = %s AND c.isactivated = 1
+        ", $id_student);
+
+        return $wpdb->get_var($query) > 0;
     }
 }

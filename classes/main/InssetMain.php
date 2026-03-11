@@ -14,6 +14,7 @@ class InssetMain {
         add_shortcode('insset_login', ['InssetLoginShortcode', 'render']);
         add_shortcode('insset_register', ['InssetRegisterShortcode', 'render']);
         add_shortcode('insset_choices', ['InssetChoiceShortcode', 'render']);
+        add_shortcode('insset_confirmation', ['InssetConfirmationShortcode', 'render']);
     }
     /**
      * NOUVEAU : Démarre la session si elle n'existe pas encore

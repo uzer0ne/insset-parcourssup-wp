@@ -11,6 +11,14 @@ class InssetChoiceShortcode {
             wp_redirect(home_url('/connexion/'));
             exit;
         }
+        $id_student = $_SESSION['insset_student_id'];
+
+        // 2. VÉRIFICATION DU DOUBLE VOTE (NOUVEAU)
+        if (InssetChoiceCrud::has_participated($id_student)) {
+            // S'il a déjà voté, on le redirige de force vers le récapitulatif !
+            wp_redirect(home_url('/confirmation/'));
+            exit;
+        }
 
         // Pour l'affichage, on simule quelques formations 
         // (Plus tard on les récupèrera avec un CRUD dans la table insset_choice)
