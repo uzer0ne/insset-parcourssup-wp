@@ -97,4 +97,25 @@ class InssetChoiceCrud {
 
         return $wpdb->get_var($query) > 0;
     }
+
+    /**
+     * Récupère tous les choix de tous les étudiants pour UNE campagne précise
+     */
+    public static function get_results_by_campaign($id_campaign) {
+        global $wpdb;
+        $t_stc     = $wpdb->prefix . 'insset_student_to_campaign';
+        $t_student = $wpdb->prefix . 'insset_student';
+        $t_choice  = $wpdb->prefix . 'insset_student_choice';
+
+        $query = $wpdb->prepare("
+            SELECT st.lname_student, st.fname_student, sc.choice_order, sc.id_choice
+            FROM $t_stc stc
+            INNER JOIN $t_student st ON stc.id_student = st.id_student
+            INNER JOIN $t_choice sc ON stc.id_student_to_campaign = sc.id_student_to_campaign
+            WHERE stc.id_campaign = %d
+            ORDER BY st.lname_student ASC, st.fname_student ASC, sc.choice_order ASC
+        ", $id_campaign);
+
+        return $wpdb->get_results($query);
+    }
 }

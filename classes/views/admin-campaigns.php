@@ -60,6 +60,7 @@
                             <?php echo ($camp->isactivated) ? '<span style="color:green; font-weight:bold;">Active</span>' : '<span style="color:red;">Fermée</span>'; ?>
                         </td>
                         <td>
+                            <a href="?page=insset-campaigns&action=view_results&id=<?php echo $camp->id_campaign; ?>"><strong>Voir les résultats</strong></a> | 
                             <a href="#">Modifier</a> | 
                             <a href="#" style="color: #b32d2e;">Supprimer</a>
                         </td>
