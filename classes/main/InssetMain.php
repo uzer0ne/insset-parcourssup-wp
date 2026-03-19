@@ -15,6 +15,7 @@ class InssetMain {
         add_shortcode('insset_register', ['InssetRegisterShortcode', 'render']);
         add_shortcode('insset_choices', ['InssetChoiceShortcode', 'render']);
         add_shortcode('insset_confirmation', ['InssetConfirmationShortcode', 'render']);
+        add_action('admin_post_insset_export_csv', ['InssetExportCsv', 'generate_csv']);
     }
     /**
      * NOUVEAU : Démarre la session si elle n'existe pas encore

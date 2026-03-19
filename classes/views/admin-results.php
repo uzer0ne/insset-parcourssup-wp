@@ -3,7 +3,18 @@
 <div class="wrap">
     <h1 class="wp-heading-inline">Résultats de la campagne (ID: <?php echo esc_html($id_campaign); ?>)</h1>
     
-    <a href="?page=insset-campaigns" class="page-title-action">Retour aux campagnes</a>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="?page=insset-campaigns" class="button">Retour aux campagnes</a>
+        
+        <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
+            <input type="hidden" name="action" value="insset_export_csv">
+            <input type="hidden" name="id_campaign" value="<?php echo esc_attr($id_campaign); ?>">
+            
+            <button type="submit" name="insset_export_btn" class="button button-primary">
+                📥 Exporter les choix au format CSV
+            </button>
+        </form>
+    </div>
     
     <hr class="wp-header-end">
 
