@@ -56,4 +56,37 @@ class InssetCampaignCrud {
         
         return true;
     }
+
+    /**
+     * Récupère une seule campagne par son ID
+     */
+    public static function get_by_id($id_campaign) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'insset_campaign';
+        
+        $query = $wpdb->prepare("SELECT * FROM $table_name WHERE id_campaign = %d", $id_campaign);
+        return $wpdb->get_row($query);
+    }
+
+    /**
+     * Met à jour une campagne existante
+     */
+    public static function update($id, $name, $desc, $start, $end, $isactivated) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'insset_campaign';
+
+        $wpdb->update(
+            $table_name,
+            [
+                'name_campaign' => sanitize_text_field($name),
+                'desc_campaign' => sanitize_textarea_field($desc),
+                'startdate'     => $start,
+                'end_date'      => $end,
+                'isactivated'   => intval($isactivated)
+            ],
+            ['id_campaign' => $id], // La condition WHERE (quel ID modifier)
+            ['%s', '%s', '%s', '%s', '%d'], // Les formats des données
+            ['%d'] // Le format de l'ID
+        );
+    }
 }

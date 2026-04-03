@@ -59,10 +59,16 @@
                         <td>
                             <?php echo ($camp->isactivated) ? '<span style="color:green; font-weight:bold;">Active</span>' : '<span style="color:red;">Fermée</span>'; ?>
                         </td>
+                        <?php 
+                            // On génère une URL de base
+                            $delete_url = add_query_arg(['page' => 'insset-campaigns', 'action' => 'delete', 'id' => $camp->id_campaign], admin_url('admin.php'));
+                            // On y ajoute le jeton de sécurité (Nonce) spécifique à cette campagne
+                            $secure_delete_url = wp_nonce_url($delete_url, 'delete_campaign_' . $camp->id_campaign);
+                            ?>
                         <td>
                             <a href="?page=insset-campaigns&action=view_results&id=<?php echo $camp->id_campaign; ?>"><strong>Voir les résultats</strong></a> | 
-                            <a href="#">Modifier</a> | 
-                            <a href="?page=insset-campaigns&action=delete&id=<?php echo $camp->id_campaign; ?>" style="color: #b32d2e;" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette campagne ?');">Supprimer</a>
+                            <a href="?page=insset-campaigns&action=edit&id=<?php echo $camp->id_campaign; ?>">Modifier</a>
+                            <a href="<?php echo esc_url($secure_delete_url); ?>" style="color: #b32d2e;" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette campagne ?');">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

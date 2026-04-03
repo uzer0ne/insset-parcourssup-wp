@@ -34,7 +34,9 @@ class InssetCampaignController {
         // --- NOUVEAU : INTERCEPTION DE LA SUPPRESSION ---
         if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
             $id_campaign = intval($_GET['id']);
-            
+            if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'delete_campaign_' . $id_campaign)) {
+                wp_die('Erreur de sécurité : Action non autorisée (CSRF).');
+            }
             // On appelle notre CRUD
             $is_deleted = InssetCampaignCrud::delete($id_campaign);
             
@@ -43,6 +45,38 @@ class InssetCampaignController {
                 echo '<div class="notice notice-success is-dismissible"><p>La campagne a été supprimée avec succès.</p></div>';
             } else {
                 echo '<div class="notice notice-error is-dismissible"><p><strong>Erreur :</strong> Impossible de supprimer cette campagne car des étudiants y ont déjà formulé des choix.</p></div>';
+            }
+        }
+        // --- FIN NOUVEAU ---
+        // --- NOUVEAU : INTERCEPTION DE LA MODIFICATION ---
+        if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
+            $id_campaign = intval($_GET['id']);
+
+            if (isset($_POST['insset_edit_campaign'])) {
+                // NOUVEAU : VÉRIFICATION DU NONCE (SÉCURITÉ)
+                if (!isset($_POST['insset_edit_nonce']) || !wp_verify_nonce($_POST['insset_edit_nonce'], 'edit_campaign_action')) {
+                    wp_die('Erreur de sécurité : Action non autorisée (CSRF).');
+                }
+                $isactivated = isset($_POST['isactivated']) ? 1 : 0;
+
+                InssetCampaignCrud::update(
+                    $id_campaign,
+                    $_POST['name_campaign'],
+                    $_POST['desc_campaign'],
+                    $_POST['start_date'],
+                    $_POST['end_date'],
+                    $isactivated
+                );
+                echo '<div class="notice notice-success is-dismissible"><p>Campagne mise à jour avec succès.</p></div>';
+            }
+
+            // 2. On récupère les infos de la campagne pour pré-remplir le formulaire
+            $campaign = InssetCampaignCrud::get_by_id($id_campaign);
+            
+            if ($campaign) {
+                // On charge la vue de modification et on STOP l'exécution pour ne pas afficher la liste
+                require_once INSSET_DIR . 'classes/views/admin-campaign-edit.php';
+                return; 
             }
         }
         // --- FIN NOUVEAU ---
