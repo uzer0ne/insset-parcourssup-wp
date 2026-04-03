@@ -35,14 +35,25 @@ class InssetCampaignCrud {
     }
     
     /**
-     * Supprime une campagne (avec vérification plus tard)
+     * Supprime une campagne (avec vérification de la règle métier)
      */
-    public static function delete($id) {
+    public static function delete($id_campaign) {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'insset_campaign';
         
-        // TODO: Vérifier s'il y a des étudiants inscrits avant de supprimer (Règle métier)
+        // 1. RÈGLE MÉTIER : Vérifier s'il y a des participants
+        $table_stc = $wpdb->prefix . 'insset_student_to_campaign';
+        $query = $wpdb->prepare("SELECT COUNT(*) FROM $table_stc WHERE id_campaign = %d", $id_campaign);
+        $participants_count = $wpdb->get_var($query);
+
+        // Si au moins un étudiant a participé, on bloque la suppression !
+        if ($participants_count > 0) {
+            return false; 
+        }
+
+        // 2. Si c'est vide, on peut supprimer en toute sécurité
+        $table_campaign = $wpdb->prefix . 'insset_campaign';
+        $wpdb->delete($table_campaign, ['id_campaign' => $id_campaign], ['%d']);
         
-        $wpdb->delete($table_name, ['id_campaign' => $id], ['%d']);
+        return true;
     }
 }

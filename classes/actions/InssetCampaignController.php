@@ -31,6 +31,21 @@ class InssetCampaignController {
             require_once INSSET_DIR . 'classes/views/admin-results.php';
             return; 
         }
+        // --- NOUVEAU : INTERCEPTION DE LA SUPPRESSION ---
+        if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+            $id_campaign = intval($_GET['id']);
+            
+            // On appelle notre CRUD
+            $is_deleted = InssetCampaignCrud::delete($id_campaign);
+            
+            // On affiche un message selon le résultat
+            if ($is_deleted) {
+                echo '<div class="notice notice-success is-dismissible"><p>La campagne a été supprimée avec succès.</p></div>';
+            } else {
+                echo '<div class="notice notice-error is-dismissible"><p><strong>Erreur :</strong> Impossible de supprimer cette campagne car des étudiants y ont déjà formulé des choix.</p></div>';
+            }
+        }
+        // --- FIN NOUVEAU ---
         // 1. TRAITEMENT DU FORMULAIRE (Si on a cliqué sur "Ajouter")
         if (isset($_POST['insset_submit_campaign'])) {
             // Vérification de sécurité (Nonce)

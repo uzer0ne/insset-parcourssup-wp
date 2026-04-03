@@ -62,7 +62,7 @@
                         <td>
                             <a href="?page=insset-campaigns&action=view_results&id=<?php echo $camp->id_campaign; ?>"><strong>Voir les résultats</strong></a> | 
                             <a href="#">Modifier</a> | 
-                            <a href="#" style="color: #b32d2e;">Supprimer</a>
+                            <a href="?page=insset-campaigns&action=delete&id=<?php echo $camp->id_campaign; ?>" style="color: #b32d2e;" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette campagne ?');">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
